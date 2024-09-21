@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +11,6 @@ func handleReturnPong(c *gin.Context) {
 }
 
 func main() {
-	fmt.Println("hello world")
 	r := gin.Default()
 	r.GET("/ping", handleReturnPong)
 	r.Run(":9000")
