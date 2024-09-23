@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/neverloved-dev/goJWT/db"
 )
 
 func handleReturnPong(c *gin.Context) {
@@ -12,6 +13,7 @@ func handleReturnPong(c *gin.Context) {
 
 func main() {
 	r := gin.Default()
+	db.Connect()
 	r.GET("/ping", handleReturnPong)
 	r.Run(":9000")
 }
