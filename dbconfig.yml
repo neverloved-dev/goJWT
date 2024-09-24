@@ -1,0 +1,4 @@
+development:
+    dialect: postgres
+    datasource: host=localhost dbname=gojwt user=postgresuser password=postgrespassword sslmode=disable
+    dir: migrations
