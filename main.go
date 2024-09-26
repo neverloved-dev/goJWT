@@ -59,10 +59,6 @@ func generateTokenPair(username string, ipaddress string, userguid string) (map[
 
 }
 
-func refreshTokenPair(ipaddress string, userguid string) {
-
-}
-
 func handleReturnPong(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "pong",
@@ -109,7 +105,6 @@ func HandleRefreshTokens(c *gin.Context, guid string, refreshToken string) {
 
 	// Compare IP address from token with the request IP
 	if tokenIP != requestIP {
-		// If IPs don't match, send an email to the user
 		err := notifyUser(guid)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to notify user"})
@@ -136,7 +131,6 @@ func HandleRefreshTokens(c *gin.Context, guid string, refreshToken string) {
 
 // notifyUser sends an email to the user notifying them of a suspicious login attempt
 func notifyUser(userGUID string) error {
-	// Fetch user email from the database using GORM
 	var user User
 	result := db.Database.Where("guid = ?", userGUID).First(&user)
 	if result.Error != nil {
@@ -150,10 +144,7 @@ func notifyUser(userGUID string) error {
 	m.SetHeader("Subject", "Suspicious Login Attempt")
 	m.SetBody("text/html", fmt.Sprintf("Dear user,<br><br>We detected a login attempt from an unknown IP address.<br>If this was not you, please secure your account immediately."))
 
-	// Set up the email dialer
 	d := gomail.NewDialer("smtp.example.com", 587, "username", "password")
-
-	// Send the email
 	if err := d.DialAndSend(m); err != nil {
 		return fmt.Errorf("failed to send email: %v", err)
 	}
@@ -178,10 +169,8 @@ func main() {
 			return
 		}
 
-		// Assume userGUID is retrieved from session or auth context (hardcoded for example)
 		userGUID := c.Param("guid")
 
-		// Call the function to check IP and refresh tokens
 		HandleRefreshTokens(c, userGUID, request.RefreshToken)
 	})
 	r.Run(":9000")
